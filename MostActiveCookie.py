@@ -14,9 +14,15 @@ def convert_date_string_to_int(date_str):
 
 
 def analyze_line(cookie_str):
-    index_of_comma = cookie_str.index(',') #finds index of comma in cookie string
+    try:
+        index_of_comma = cookie_str.index(',') #finds index of comma in cookie string
+    except:
+        raise Exception('No comma in cookie string, it should signal end of cookie name and start of date')
     cookie = cookie_str[:index_of_comma]
-    index_of_T = cookie_str[index_of_comma:].index(',') #finds index of T which starts time in cookie string
+    try:
+        index_of_T = cookie_str[index_of_comma:].index('T') #finds index of T which starts time in cookie string
+    except:
+        raise Exception('No T in cookie string after comma, it should signal the end of date and start of time')
     time = cookie_str[index_of_T + 1:]
     date_string = cookie_str[index_of_comma + 1:index_of_comma + 11] #finds substring of 10 charactesr after comma, which is date
     return cookie,date_string,time
