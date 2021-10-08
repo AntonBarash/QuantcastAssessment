@@ -17,7 +17,7 @@ def analyze_line(cookie_str):
         index_of_T = cookie_str[index_of_comma:].index('T') + index_of_comma
     except:
         raise Exception('No T in cookie string after comma, it should signal the end of date and start of time')
-    time = cookie_str[index_of_T + 1:]
+    time = cookie_str[index_of_T + 1:-1]
     date_string = cookie_str[index_of_comma + 1:index_of_comma + 11]
     return cookie_name,date_string,time
 
