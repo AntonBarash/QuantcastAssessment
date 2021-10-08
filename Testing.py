@@ -159,8 +159,6 @@ class Find_Most_Active_Cookie_Test(unittest.TestCase):
         self.assertEqual(output.getvalue(),'4sMM2LxV07bPJzwf\n')
 
     def test4(self):
-        output = io.StringIO()
-        sys.stdout = output
         file = open('cookie_log.csv','r')
         try:
             most_active_cookie.find_most_active_cookie(file,'2018-12-06')
@@ -169,19 +167,76 @@ class Find_Most_Active_Cookie_Test(unittest.TestCase):
             return
         raise Exception('Find most active cookie test #4 didnt produce error when it should have')
 
+    def test5(self):
+        file = open('error_cookie_log.csv','r')
+        try:
+            most_active_cookie.find_most_active_cookie(file,'2018-12-09')
+        except Exception as e:
+            self.assertEqual(str(e),'No comma in cookie string, it should signal end of cookie name and start of date')
+            return
+        raise Exception('Find most active cookie test #5 didnt produce error when it should have')
+
+    def test6(self):
+        file = open('cookie_log2.csv','r')
+        try:
+            most_active_cookie.find_most_active_cookie(file,'2018-12-08')
+        except Exception as e:
+            self.assertEqual(str(e),'No cookies on this date were found')
+            return
+        raise Exception('Find most active cookie test #6 didnt produce error when it should have')
+
+    def test7(self):
+        output = io.StringIO()
+        sys.stdout = output
+        file = open('cookie_log3.csv','r')
+        most_active_cookie.find_most_active_cookie(file,'0000-01-01')
+        sys.stdout = sys.__stdout__
+        self.assertEqual(output.getvalue(),'A\n')
+
+    def test8(self):
+        output = io.StringIO()
+        sys.stdout = output
+        file = open('cookie_log3.csv','r')
+        most_active_cookie.find_most_active_cookie(file,'0000-02-01')
+        sys.stdout = sys.__stdout__
+        self.assertEqual(output.getvalue(),'\n')
+
+    def test9(self):
+        output = io.StringIO()
+        sys.stdout = output
+        file = open('cookie_log3.csv','r')
+        most_active_cookie.find_most_active_cookie(file,'0000-03-01')
+        sys.stdout = sys.__stdout__
+        list_of_cookies = output.getvalue().split('\n')
+        list_of_cookies.sort()
+        list_of_cookies.remove('')
+        self.assertEqual(list_of_cookies,['A','B'])
+
+    def test10(self):
+        file = open('cookie_log3.csv','r')
+        try:
+            most_active_cookie.find_most_active_cookie(file,'0000-01-02')
+        except Exception as e:
+            self.assertEqual(str(e),'No cookies on this date were found')
+            return
+        raise Exception('Find most active cookie test #10 didnt produce error when it should have')
+
 
 Converting_Date_Test().test1()
 Converting_Date_Test().test2()
 Converting_Date_Test().test3()
+print('All converting date tests passed!')
 
 Analyze_Line_Test().test1()
 Analyze_Line_Test().test2()
 Analyze_Line_Test().test3()
+print('All analyze line tests passed!')
 
 Find_Cookie_Dict_Test().test1()
 Find_Cookie_Dict_Test().test2()
 Find_Cookie_Dict_Test().test3()
 Find_Cookie_Dict_Test().test4()
+print('All find cookie dict tests passed!')
 
 Checking_Date_Format_Test().test1()
 Checking_Date_Format_Test().test2()
@@ -193,8 +248,17 @@ Checking_Date_Format_Test().test7()
 Checking_Date_Format_Test().test8()
 Checking_Date_Format_Test().test9()
 Checking_Date_Format_Test().test10()
+print('All checking date format tests passed!')
 
 Find_Most_Active_Cookie_Test().test1()
 Find_Most_Active_Cookie_Test().test2()
 Find_Most_Active_Cookie_Test().test3()
 Find_Most_Active_Cookie_Test().test4()
+Find_Most_Active_Cookie_Test().test5()
+Find_Most_Active_Cookie_Test().test6()
+Find_Most_Active_Cookie_Test().test7()
+Find_Most_Active_Cookie_Test().test8()
+Find_Most_Active_Cookie_Test().test10()
+print('All find most active cookie tests passed!')
+
+print('All tests passed!')
