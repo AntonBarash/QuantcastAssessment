@@ -42,6 +42,7 @@ def find_cookie_given_date(cookie_list,input_date):
 #finds the dictionary of all the cookies on a day given a file and input date
 def find_cookie_dict_of_day(file, input_date):
     list_of_cookies = create_cookie_list(file)
+    print(list_of_cookies)
     cookie_index = find_cookie_given_date(list_of_cookies,input_date)
     if cookie_index == -1:
         raise Exception('No cookies on this date were found')
@@ -81,7 +82,7 @@ def create_cookie_list(file):
             cookie_list.append(Cookie(cookie_name,date,time))
     return cookie_list
 
-#finds most active cookie given the file and input date
+#finds most active cookie given the file and input date, prints all of these cookies
 def find_most_active_cookie(file, input_date):
     cookie_dict = find_cookie_dict_of_day(file, input_date)
     sorted_cookie_list = sorted(cookie_dict.items(), key = lambda x: x[1], reverse = True)
