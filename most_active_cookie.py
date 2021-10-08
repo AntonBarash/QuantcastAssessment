@@ -42,7 +42,6 @@ def find_cookie_given_date(cookie_list,input_date):
 #finds the dictionary of all the cookies on a day given a file and input date
 def find_cookie_dict_of_day(file, input_date):
     list_of_cookies = create_cookie_list(file)
-    print(list_of_cookies)
     cookie_index = find_cookie_given_date(list_of_cookies,input_date)
     if cookie_index == -1:
         raise Exception('No cookies on this date were found')
