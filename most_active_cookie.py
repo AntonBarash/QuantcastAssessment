@@ -114,18 +114,20 @@ def check_valid_date(date_str):
     if len(month) != 2:
         raise Exception('Month should be of length 2')
     try:
-        if int(month) < 1 or int(month) > 12:
-            raise Exception('Month must be between 1 and 12')
+        month_int = int(month)
     except:
         raise Exception('Month must be an integer')
+    if month_int < 1 or month_int > 12:
+        raise Exception('Month must be between 1 and 12')
     day = substring_after_first_dash[index_of_second_dash + 1:]
     if len(day) != 2:
         raise Exception('Day should be of length 2')
     try:
-        if int(day) < 1 or int(day) > 31:
-            raise Exception('Day must be between 1 and 31')
+        day_int = int(day)
     except:
         raise Exception('Day must be an integer')
+    if day_int < 1 or day_int > 12:
+        raise Exception('Day must be between 1 and 31')
 
 if __name__ == "__main__":
     arg_list = []
