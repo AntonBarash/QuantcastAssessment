@@ -3,6 +3,7 @@ import sys
 
 #converts date string to integer representation without dashes
 def convert_date_string_to_int(date_str):
+    check_valid_date(date_str)
     return int(date_str.replace('-',''))
 
 #analyzes a line from the csv file, finding the cookie name, date, and time from it
@@ -35,13 +36,15 @@ def find_cookie_given_date(cookie_list,input_date):
         elif current_date_int < input_date_int:
             end = current_index - 1
         else:
-            start = current_index - 1
+            start = current_index + 1
     return -1
 
 #finds the dictionary of all the cookies on a day given a file and input date
 def find_cookie_dict_of_day(file, input_date):
     list_of_cookies = create_cookie_list(file)
     cookie_index = find_cookie_given_date(list_of_cookies,input_date)
+    if cookie_index == -1:
+        raise Exception('No cookies on this date were found')
     cookie_dict = {}
     index_after = cookie_index
     index_before = cookie_index - 1
@@ -111,14 +114,16 @@ def check_valid_date(date_str):
     if len(month) != 2:
         raise Exception('Month should be of length 2')
     try:
-        int(month)
+        if int(month) < 1 or int(month) > 12:
+            raise Exception('Month must be between 1 and 12')
     except:
         raise Exception('Month must be an integer')
     day = substring_after_first_dash[index_of_second_dash + 1:]
     if len(day) != 2:
         raise Exception('Day should be of length 2')
     try:
-        int(day)
+        if int(day) < 1 or int(day) > 31:
+            raise Exception('Day must be between 1 and 31')
     except:
         raise Exception('Day must be an integer')
 
