@@ -1,17 +1,8 @@
 from Cookie_Class import Cookie
+import sys
 
 def convert_date_string_to_int(date_str):
-    if len(date_str) != 10:
-        raise Exception('Date should be 10 characters')
-    index_of_first_dash = date_str.find('-')
-    if index_of_first_dash == -1:
-        raise Exception('Date should have 2 dashes separating the year, month, and day values, has 0')
-    substring_after_first_dash = date_str[index_of_first_dash + 1:]
-    index_of_second_dash = substring_after_first_dash.find('-')
-    if index_of_second_dash == -1:
-        raise Exception('Date should have 2 dashes separating the year, month, and day values, has 1')
     return int(date_str.replace('-',''))
-
 
 def analyze_line(cookie_str):
     try:
@@ -94,4 +85,52 @@ def find_most_active_cookie(filename, input_date):
     for i in range(last_max_ind):
         print(sorted_cookie_list[i][0])
 
-find_most_active_cookie('test.csv','2018-12-08')
+def check_valid_date(date_str):
+    if len(date_str) != 10:
+        raise Exception('Date should be 10 characters')
+    index_of_first_dash = date_str.find('-')
+    if index_of_first_dash == -1:
+        raise Exception('Date should have 2 dashes separating the year, month, and day values, has 0')
+    year = date_str[:index_of_first_dash]
+    if len(year) != 4:
+        raise Exception('Year should be of length 4')
+    try:
+        int(year)
+    except:
+        raise Exception('Year must be an integer')
+    substring_after_first_dash = date_str[index_of_first_dash + 1:]
+    index_of_second_dash = substring_after_first_dash.find('-')
+    if index_of_second_dash == -1:
+        raise Exception('Date should have 2 dashes separating the year, month, and day values, has 1')
+    month = substring_after_first_dash[:index_of_second_dash]
+    if len(month) != 2:
+        raise Exception('Month should be of length 2')
+    try:
+        int(month)
+    except:
+        raise Exception('Month must be an integer')
+    day = substring_after_first_dash[index_of_second_dash + 1:]
+    if len(day) != 2:
+        raise Exception('Day should be of length 2')
+    try:
+        int(day)
+    except:
+        raise Exception('Day must be an integer')
+
+if __name__ == "__main__":
+    arg_list = []
+    for arg in sys.argv:
+        arg_list.append(arg)
+    if len(arg_list) < 4:
+        raise Exception('There should be 4 arguments, the python file, the cookie log file, -d, and the date in UTC form. There are instead ' + len(arg_list) + ' arguments.')
+    filename = arg_list[1]
+    try:
+        open(filename,'r')
+    except:
+        raise Exception(filename + ' path cant be found')
+    dash_d = arg_list[2]
+    if dash_d != '-d':
+        raise Exception('Third argument should be -d')
+    date = arg_list[3]
+    check_valid_date(date)
+    find_most_active_cookie(filename,date)
