@@ -1,25 +1,27 @@
 from Cookie_Class import Cookie
 import sys
 
+#converts date string to integer representation without dashes
 def convert_date_string_to_int(date_str):
     return int(date_str.replace('-',''))
 
+#analyzes a line from the csv file, finding the cookie name, date, and time from it
 def analyze_line(cookie_str):
     try:
-        index_of_comma = cookie_str.index(',') #finds index of comma in cookie string
+        index_of_comma = cookie_str.index(',')
     except:
         raise Exception('No comma in cookie string, it should signal end of cookie name and start of date')
-    cookie = cookie_str[:index_of_comma]
+    cookie_name = cookie_str[:index_of_comma]
     try:
-        index_of_T = cookie_str[index_of_comma:].index('T') #finds index of T which starts time in cookie string
+        index_of_T = cookie_str[index_of_comma:].index('T') + index_of_comma
     except:
         raise Exception('No T in cookie string after comma, it should signal the end of date and start of time')
     time = cookie_str[index_of_T + 1:]
-    date_string = cookie_str[index_of_comma + 1:index_of_comma + 11] #finds substring of 10 charactesr after comma, which is date
-    return cookie,date_string,time
+    date_string = cookie_str[index_of_comma + 1:index_of_comma + 11]
+    return cookie_name,date_string,time
 
 
-#binary search function to find a cookie with input date
+#binary search function to find a cookie with input date from the cookie list, since list is sorted
 def find_cookie_given_date(cookie_list,input_date):
     start = 0
     input_date_int = convert_date_string_to_int(input_date)
@@ -36,8 +38,9 @@ def find_cookie_given_date(cookie_list,input_date):
             start = current_index - 1
     return -1
 
-def find_cookie_dict_of_day(filename, input_date):
-    list_of_cookies = create_cookie_list(filename)
+#finds the dictionary of all the cookies on a day given a file and input date
+def find_cookie_dict_of_day(file, input_date):
+    list_of_cookies = create_cookie_list(file)
     cookie_index = find_cookie_given_date(list_of_cookies,input_date)
     cookie_dict = {}
     index_after = cookie_index
@@ -62,8 +65,8 @@ def find_cookie_dict_of_day(filename, input_date):
         index_before -= 1
     return cookie_dict
 
-def create_cookie_list(filename):
-    file = open(filename,'r')
+#creates the cookie list given the file
+def create_cookie_list(file):
     found_date = False
     cookie_list = []
     check_for_first_line = True
@@ -75,8 +78,9 @@ def create_cookie_list(filename):
             cookie_list.append(Cookie(cookie_name,date,time))
     return cookie_list
 
-def find_most_active_cookie(filename, input_date):
-    cookie_dict = find_cookie_dict_of_day(filename, input_date)
+#finds most active cookie given the file and input date
+def find_most_active_cookie(file, input_date):
+    cookie_dict = find_cookie_dict_of_day(file, input_date)
     sorted_cookie_list = sorted(cookie_dict.items(), key = lambda x: x[1], reverse = True)
     last_max_ind = 1
     maximum = sorted_cookie_list[0][1]
@@ -85,6 +89,7 @@ def find_most_active_cookie(filename, input_date):
     for i in range(last_max_ind):
         print(sorted_cookie_list[i][0])
 
+#error checking function for the date input, to make sure its valid
 def check_valid_date(date_str):
     if len(date_str) != 10:
         raise Exception('Date should be 10 characters')
@@ -125,7 +130,7 @@ if __name__ == "__main__":
         raise Exception('There should be 4 arguments, the python file, the cookie log file, -d, and the date in UTC form. There are instead ' + len(arg_list) + ' arguments.')
     filename = arg_list[1]
     try:
-        open(filename,'r')
+        file = open(filename,'r')
     except:
         raise Exception(filename + ' path cant be found')
     dash_d = arg_list[2]
@@ -133,4 +138,4 @@ if __name__ == "__main__":
         raise Exception('Third argument should be -d')
     date = arg_list[3]
     check_valid_date(date)
-    find_most_active_cookie(filename,date)
+    find_most_active_cookie(file,date)
