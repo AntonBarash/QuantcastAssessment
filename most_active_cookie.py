@@ -144,3 +144,4 @@ if __name__ == "__main__":
     date = arg_list[3]
     check_valid_date(date)
     find_most_active_cookie(file,date)
+    file.close()
